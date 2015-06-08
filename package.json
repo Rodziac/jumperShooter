@@ -1,0 +1,32 @@
+{
+  "name": "jumperShooter",
+  "version": "0.0.1",
+  "description": "two guys jumping and shooting",
+  "author": "Umut Kaya İlkiz <umutkaya2000@gmail.com>",
+  "contributors": [{
+    "name": "Umut Kaya İlkiz",
+    "email": "umutkaya2000@gmail.com"
+  }],
+  "scripts": {
+    "start": "node app",
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rodziac/jumperShooter"
+  },
+  "bugs": {
+    "url": "https://github.com/Rodziac/jumperShooter/issues"
+  },
+  "keywords": [
+    "game",
+    "javascript",
+    "native",
+    "jump",
+    "shoot",
+    "platformer"
+  ],
+  "dependencies": {
+    "express.io": "4.2.x"
+  },
+  "private": true
+}
