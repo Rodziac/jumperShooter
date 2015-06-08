@@ -1,0 +1,24 @@
+.submitButton {
+    width: 200px;
+    height: 20px;
+    background: blue;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.thisPlayer {
+    width: 10px;
+    height: 10px;
+    background: cyan;
+    display: block;
+    position: absolute;
+}
+
+.thatPlayer {
+    width: 10px;
+    height: 10px;
+    background: red;
+    display: block;
+    position: absolute;
+}
+
