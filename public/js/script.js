@@ -1,5 +1,7 @@
 io = io.connect();
 
+var playerIndex = 0;
+
 var renderLobby = function() {
 
     document.body.innerHTML = "" +
@@ -38,7 +40,7 @@ var lobbyEventHandler = function() {
         if (roomName != '') {
             io.emit('enterRoom', roomName, function(response) {
                 if (!response.isRoomFull)
-                    initWaiting();
+                    initWaiting(response);
                 else
                     document.getElementById('errorContainer').innerHTML += "<div class='error'>" + roomName + " room full</div>";
             });
@@ -93,20 +95,19 @@ var arenaEventHandler = function() {
 
     io.on('playerMove', function(data){
 
-        switch (data.data) {
-            case 38:
-                thisPlayer.style.top = thisPlayer.style.top == "" ? "-1px" : (parseInt(thisPlayer.style.top.replace("px", ""), 10) - 1) + "px";
-                break;
-            case 40:
-                thisPlayer.style.top = thisPlayer.style.top == "" ? "1px" : (parseInt(thisPlayer.style.top.replace("px", ""), 10) + 1) + "px";
-                break;
-            case 39:
-                thisPlayer.style.left = thisPlayer.style.left == "" ? "-1px" : (parseInt(thisPlayer.style.left.replace("px", ""), 10) - 1) + "px";
-                break;
-            case 37:
-                thisPlayer.style.left = thisPlayer.style.left == "" ? "1px" : (parseInt(thisPlayer.style.left.replace("px", ""), 10) + 1) + "px";
-                break;
-        }
+        var movingPlayer = data.index == playerIndex ?
+            document.getElementsByClassName("thisPlayer")[0] :
+            document.getElementsByClassName("thatPlayer")[0];
+
+        movingPlayer.style.top = data.yPos + "px";
+        movingPlayer.style.left = data.xPos + "px";
+
+    });
+
+    io.on('stopGame', function() {
+
+        alert("The game has ended because your opponent has disconnected");
+        window.location.reload(true);
 
     });
 
@@ -119,8 +120,9 @@ var initLobby = function() {
 
 };
 
-var initWaiting = function() {
+var initWaiting = function(response) {
 
+    playerIndex = response.index;
     renderWaiting();
     waitingEventHandler();
 

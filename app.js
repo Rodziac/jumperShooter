@@ -19,13 +19,22 @@ app.io.route('enterRoom', function(req) {
     if (userCount < 2) {
 
         req.io.join(req.data);
-        req.io.respond({'isRoomFull': false});
 
-        if (userCount == 1) {
+        req.io.respond({'isRoomFull': false, index: userCount});
 
-            app.io.room(req.data).broadcast('roomReady', {});
+        req.session.index = userCount;
 
-        }
+        req.session.save(function() {
+            if (userCount == 1) {
+
+                app.io.room(req.data).broadcast('roomReady', {});
+
+                req.io.socket.on('disconnect', function(){
+                    req.io.room(req.data).broadcast('stopGame');
+                });
+
+            }
+        });
 
     } else {
         req.io.respond({'isRoomFull': true});
@@ -34,12 +43,29 @@ app.io.route('enterRoom', function(req) {
 
 app.io.route('keyDown', function(req){
 
-    app.io.room(req.data.roomName).broadcast('playerMove', {data: req.data.key});
+    switch (req.data.key) {
+        case 38:
+            req.session.yPos -= 10;
+            break;
+        case 40:
+            req.session.yPos += 10;
+            break;
+        case 37:
+            req.session.xPos -= 10;
+            break;
+        case 39:
+            req.session.xPos += 10;
+            break;
+    }
+
+    req.session.save(function() {
+        app.io.room(req.data.roomName).broadcast('playerMove', req.session);
+    });
 
 });
 
 app.listen(3000);
 
 var getRoomPopulation = function(roomId, req) {
-    return req.io.room(roomId).socket.manager.rooms['/' + roomId] ? req.io.room(roomId).socket.manager.rooms['/' + roomId].length : 0;
+    return app.io.sockets.clients(roomId).length;
 };
