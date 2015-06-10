@@ -1,6 +1,8 @@
-app = require('express.io')();
-app.http().io();
+engine = require('express.io');
+app = engine().http().io();
 
+app.use(engine.cookieParser());
+app.use(engine.session({secret: 'monkey'}));
 
 app.get('/', function(req, res) {
     res.sendfile(__dirname + '/public/index.html');
