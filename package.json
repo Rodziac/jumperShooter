@@ -26,7 +26,7 @@
     "platformer"
   ],
   "dependencies": {
-    "express.io": "4.2.x"
+    "express.io": "*"
   },
   "private": true
 }
